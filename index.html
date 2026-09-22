@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#063f2f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Lutsa vidcall - social video calling, chat, files and voice messages.">
+  <title>Lutsa vidcall</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <section id="introScreen" class="intro-screen" aria-label="Lutsa intro">
+    <div class="intro-glow intro-glow-a"></div>
+    <div class="intro-glow intro-glow-b"></div>
+    <div class="intro-particles" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="intro-orbit intro-orbit-one"></div>
+    <div class="intro-orbit intro-orbit-two"></div>
+    <div class="intro-card">
+      <div class="intro-photo-wrap">
+        <img class="intro-photo" src="/assets/intro-photo.jpg" alt="" decoding="async" fetchpriority="high">
+      </div>
+      <div class="intro-logo"><span>L</span></div>
+      <div class="intro-kicker" data-i18n="introKicker">LUTSA PREMIUM</div>
+      <h1 data-i18n="introTitle">تواصل. اتصل. شارك.</h1>
+      <p data-i18n="introSubtitle">تجربة اجتماعية جديدة للمكالمات والدردشة والأصدقاء.</p>
+      <div class="intro-progress"><span></span></div>
+      <button id="skipIntroBtn" class="intro-skip" type="button" data-i18n="skipIntro">تخطي</button>
+    </div>
+  </section>
+
+  <section id="authScreen" class="auth-screen" aria-label="Lutsa authentication">
+    <div class="auth-glow auth-glow-a"></div><div class="auth-glow auth-glow-b"></div>
+    <div class="auth-card">
+      <div class="auth-logo">L</div>
+      <div class="auth-kicker">LUTSA PREMIUM</div>
+      <h1 id="authTitle">تسجيل الدخول</h1>
+      <p id="authSubtitle">ادخل إلى حسابك للوصول إلى أصدقائك ورسائلك ومكالماتك.</p>
+      <div class="auth-tabs">
+        <button id="loginModeBtn" class="active" type="button">تسجيل الدخول</button>
+        <button id="registerModeBtn" type="button">إنشاء حساب</button>
+      </div>
+      <form id="loginForm" class="auth-form">
+        <label><span data-i18n="username">اسم المستخدم</span><input id="loginUsername" required maxlength="32" autocomplete="username"></label>
+        <label><span data-i18n="password">كلمة المرور</span><input id="loginPassword" type="password" required minlength="8" maxlength="128" autocomplete="current-password"></label>
+        <button class="auth-submit" type="submit" data-i18n="login">دخول</button>
+      </form>
+      <form id="registerForm" class="auth-form hidden">
+        <label><span data-i18n="displayName">الاسم الظاهر</span><input id="registerDisplayName" required maxlength="40" autocomplete="name"></label>
+        <label><span data-i18n="username">اسم المستخدم</span><input id="registerUsername" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_-]{3,32}" autocomplete="username"></label>
+        <label><span data-i18n="password">كلمة المرور</span><input id="registerPassword" type="password" required minlength="8" maxlength="128" autocomplete="new-password"></label>
+        <button class="auth-submit" type="submit" data-i18n="createAccount">إنشاء الحساب</button>
+      </form>
+      <div id="authMessage" class="auth-message" role="status"></div>
+    </div>
+  </section>
+
+  <main class="app-shell">
+    <section id="lobby" class="social-home">
+      <header class="social-header">
+        <div class="social-brand">
+          <div class="brand-orb">L</div>
+          <div id="appName" class="brand-word">Lutsa vidcall</div>
+        </div>
+        <div class="header-actions">
+          <button id="searchUsersBtn" class="circle-btn" type="button" aria-label="Search">⌕</button>
+          <button id="notificationsNavBtn" class="circle-btn" type="button" aria-label="Notifications">♡</button>
+          <label class="language-mini">
+            <select id="languageSelect" aria-label="Language">
+              <option value="ar">AR</option>
+              <option value="en">EN</option>
+              <option value="cs">CZ</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <div class="social-scroll">
+        <section class="profile-strip">
+          <div class="profile-avatar me-avatar" data-avatar-wrap="self"><span class="avatar-fallback">L</span><img id="meAvatarImg" class="avatar-image hidden" alt=""></div>
+          <div class="profile-copy">
+            <strong id="homeGreeting">Lutsa vidcall</strong>
+            <span data-i18n="socialTagline">Connect. Call. Share.</span>
+          </div>
+          <div class="profile-actions"><button id="profileEditBtn" class="profile-edit" type="button" data-i18n="editProfile">Edit</button><button id="logoutBtn" class="profile-logout" type="button" data-i18n="logout">خروج</button></div>
+        </section>
+
+        <section class="stories-card">
+          <div class="section-row">
+            <div>
+              <strong data-i18n="stories">Stories</strong>
+              <span data-i18n="storiesHint">Quick moments from your people</span>
+            </div>
+            <button class="text-action" type="button" data-i18n="viewAll">View all</button>
+          </div>
+          <div class="stories-row" id="storiesRow">
+            <button class="story-add" id="storyAddBtn" type="button" title="Add story">
+              <span class="story-ring add-ring" id="storyAddRing">+</span>
+              <small data-i18n="yourStory">Your story</small>
+            </button>
+            <div id="storyPeople" class="story-people" aria-live="polite"></div>
+            <input id="storyInput" type="file" hidden accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm">
+          </div>
+          <div class="story-upload-hint" data-i18n="storyUploadHint">أضف صورة أو فيديو إلى قصتك • تظهر لمدة 24 ساعة</div>
+        </section>
+
+        <section class="composer-card">
+          <div class="composer-top">
+            <div class="mini-avatar">L</div>
+            <input id="displayName" maxlength="40" placeholder="Your name" data-i18n-placeholder="namePlaceholder" autocomplete="name">
+          </div>
+          <div class="my-user-id"><span data-i18n="yourId">معرفك</span>: <strong id="myUserId">—</strong><button id="copyUserIdBtn" type="button" data-i18n="copyId">نسخ</button></div>
+          <div class="composer-actions">
+            <button type="button" class="composer-option video-option" data-i18n="quickCall">📹 Video call</button>
+            <button type="button" class="composer-option photo-option" data-i18n="quickShare">🖼️ Share</button>
+            <button type="button" class="composer-option live-option" data-i18n="quickLive">🔴 Go live</button>
+          </div>
+        </section>
+
+        <section id="friendsCard" class="friends-card">
+          <div class="section-row">
+            <div><strong data-i18n="friends">الأصدقاء</strong><span data-i18n="friendsHint">أضف أصدقاءك وتواصل معهم مباشرة.</span></div><div class="friend-header-counts"><span>👥 <b id="friendsCountBadge">0</b></span><span>🔔 <b id="requestsCountBadge">0</b></span></div>
+            <button id="refreshFriendsBtn" class="text-action" type="button" data-i18n="refresh">تحديث</button>
+          </div>
+          <div class="quick-add-friend">
+            <div class="quick-add-icon">＋</div>
+            <div class="quick-add-copy"><strong data-i18n="quickAddFriend">إضافة صديق</strong><span data-i18n="quickAddFriendHint">أدخل معرف الصديق أو اسمه ثم أرسل الطلب مباشرة.</span></div>
+            <div class="quick-add-form"><input id="quickFriendInput" maxlength="80" placeholder="مثال: u_12345 أو Ahmed" data-i18n-placeholder="quickAddPlaceholder" autocomplete="off"><button id="quickAddFriendBtn" class="small-main" type="button" data-i18n="sendRequest">إرسال الطلب</button></div>
+          </div>
+          <div class="friend-search-row"><input id="friendSearchInput" maxlength="40" placeholder="ابحث بالاسم أو المعرف" data-i18n-placeholder="searchFriends"><button id="friendSearchBtn" class="small-main" type="button" data-i18n="search">بحث</button></div>
+          <div id="friendSearchResults" class="friend-list"></div>
+          <div id="friendRequests" class="friend-list"></div>
+          <div id="friendsList" class="friend-list"></div>
+        </section>
+
+        <section id="directMessagesCard" class="direct-messages-card hidden">
+          <div class="section-row"><div><strong data-i18n="directMessages">الرسائل الخاصة</strong><span id="directChatFriendLabel" data-i18n="chooseFriend">اختر صديقًا لبدء المحادثة.</span></div><button id="closeDirectMessagesBtn" class="text-action" type="button">✕</button></div>
+          <div id="directMessages" class="direct-messages"></div>
+          <form id="directMessageForm" class="chat-form"><input id="directMessageInput" maxlength="2000" placeholder="اكتب رسالة…" data-i18n-placeholder="typeMessage"><button class="send-btn" type="submit" data-i18n="send">إرسال</button></form>
+        </section>
+
+        <section class="hero-social-card">
+          <div class="hero-badge" data-i18n="premiumTag">LUTSA PREMIUM</div>
+          <h1 data-i18n="title">مكالماتك، أصدقاءك، في مكان واحد</h1>
+          <p data-i18n="subtitle">مكالمات فيديو وصوت ودردشة وملفات وصوتيات عبر الشبكات المختلفة.</p>
+          <div class="hero-buttons">
+            <button id="createBtn" class="cta-main" type="button" data-i18n="createRoom">Create room</button>
+            <button id="joinBtn" class="cta-ghost" type="button" data-i18n="joinRoom">Join room</button>
+          </div>
+        </section>
+
+        <section class="post-composer-card">
+          <div class="post-composer-head">
+            <div class="mini-avatar avatar-blue">L</div>
+            <div><strong data-i18n="postComposerTitle">بماذا تفكر؟</strong><span data-i18n="postComposerHint">شارك تحديثًا مع أصدقائك ومتابعيك.</span></div>
+          </div>
+          <form id="postForm" class="post-form">
+            <textarea id="postText" maxlength="2000" rows="4" placeholder="اكتب منشورًا…" data-i18n-placeholder="postPlaceholder"></textarea>
+            <div class="post-form-tools">
+              <select id="postVisibility" aria-label="Visibility"><option value="public" data-i18n="publicPost">عام</option><option value="friends" data-i18n="friendsPost">الأصدقاء</option></select>
+              <button id="createPostBtn" class="small-main" type="submit" data-i18n="publish">نشر</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="feedCard" class="feed-card">
+          <div class="section-row"><div><strong data-i18n="newsFeed">آخر المنشورات</strong><span data-i18n="newsFeedHint">منشوراتك ومنشورات أصدقائك.</span></div><button id="refreshFeedBtn" class="text-action" type="button" data-i18n="refresh">تحديث</button></div>
+          <div id="feedList" class="feed-list"></div>
+        </section>
+
+        <section id="notificationsCard" class="notifications-card hidden">
+          <div class="section-row"><div><strong data-i18n="notifications">الإشعارات</strong><span id="notificationsSummary"></span></div><button id="markNotificationsBtn" class="text-action" type="button" data-i18n="markRead">قراءة الكل</button></div>
+          <div id="notificationsList" class="notifications-list"></div>
+        </section>
+
+        <section id="profileCard" class="profile-card hidden">
+          <div class="section-row"><div><strong data-i18n="profileSettings">الملف الشخصي</strong><span data-i18n="profileHint">حدّث اسمك ونبذة التعريف.</span></div><button id="closeProfileBtn" class="text-action" type="button">✕</button></div>
+          <form id="profileForm" class="profile-form">
+            <div class="profile-avatar-editor">
+              <div class="profile-avatar profile-avatar-large" data-avatar-wrap="editor"><span class="avatar-fallback">L</span><img id="profileAvatarPreview" class="avatar-image hidden" alt=""></div>
+              <div class="profile-avatar-tools">
+                <strong data-i18n="profilePhoto">صورة الملف الشخصي</strong>
+                <span data-i18n="profilePhotoHint">اختر صورة واضحة لعرضها بجانب اسمك.</span>
+                <label class="profile-upload-btn">
+                  <span data-i18n="chooseProfilePhoto">اختيار صورة</span>
+                  <input id="profileAvatarInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+                </label>
+                <small data-i18n="profilePhotoLimit">JPG, PNG, WEBP أو GIF — حتى 5 MB</small>
+                <div id="profileAvatarStatus" class="profile-avatar-status" role="status"></div>
+              </div>
+            </div>
+            <label><span data-i18n="displayName">الاسم الظاهر</span><input id="profileDisplayName" maxlength="40"></label>
+            <label><span data-i18n="bio">نبذة</span><textarea id="profileBio" maxlength="240" rows="4"></textarea></label>
+            <button class="small-main" type="submit" data-i18n="saveProfile">حفظ</button>
+          </form>
+          <div class="profile-stats"><div><strong id="profileFriendsCount">0</strong><span data-i18n="friends">الأصدقاء</span></div><div><strong id="profilePostsCount">0</strong><span data-i18n="posts">المنشورات</span></div></div>
+        </section>
+
+        <section id="joinBox" class="join-card hidden">
+          <div class="section-row"><div><strong data-i18n="joinRoom">Join room</strong><span data-i18n="lobbyHelp">Enter a room code shared with you.</span></div><button id="joinExistingBtn" class="small-main" type="button" data-i18n="enter">Join</button></div>
+          <input id="roomInput" maxlength="64" placeholder="Room code" data-i18n-placeholder="roomPlaceholder" autocomplete="off" spellcheck="false">
+        </section>
+
+        <div id="status" class="status-pill" data-i18n="ready">Ready</div>
+      </div>
+
+      <nav class="bottom-nav social-nav" aria-label="Primary">
+        <button class="active" type="button"><span>⌂</span><small data-i18n="home">Home</small></button>
+        <button id="discoverBtn" type="button"><span>◉</span><small data-i18n="discover">Discover</small></button>
+        <button type="button" class="nav-create"><span>＋</span><small data-i18n="create">Create</small></button>
+        <button id="messagesNavBtn" type="button"><span>✉</span><small data-i18n="messagesNav">Messages</small></button>
+        <button id="profileNavBtn" type="button"><span>◎</span><small data-i18n="profile">Profile</small></button>
+      </nav>
+    </section>
+
+    <section id="call" class="hidden call-app">
+      <header class="call-social-header">
+        <button id="hangupBtn" class="call-back" type="button">‹</button>
+        <div class="call-user-title"><div class="mini-avatar avatar-blue">L</div><div><strong id="remoteLabel" data-i18n="otherParty">Other participant</strong><span><i id="networkDot" class="dot"></i><span id="networkState" data-i18n="waiting">Disconnected</span> · <b id="callTimer">00:00</b></span></div></div>
+        <div class="call-header-tools"><span class="room-mini">#<b id="roomLabel">—</b></span><button id="shareBtn" class="circle-btn" type="button">↗</button></div>
+      </header>
+
+      <div class="mobile-view-tabs social-tabs">
+        <button id="mobileCallTab" class="active" type="button">📹 <span data-i18n="callTab">Call</span></button>
+        <button id="mobileChatTab" type="button">💬 <span data-i18n="chatTab">Chat</span><span id="mobileUnreadBadge" class="tab-badge hidden">0</span></button>
+      </div>
+
+      <div class="mobile-view call-view-active" id="mobileCallView">
+        <section class="video-stage social-video-stage">
+          <div class="video-card remote-card">
+            <video id="remoteVideo" autoplay playsinline></video>
+            <div class="video-top-meta"><span class="presence-dot"></span><span data-i18n="liveNow">Live</span></div>
+            <div class="remote-placeholder" id="remotePlaceholder" data-i18n="waitingPeer">Waiting for the other participant…</div>
+            <div class="remote-audio-status" id="remoteAudioBadge" data-i18n="voice">🎙️ Audio</div>
+            <button id="remoteAudioButton" class="audio-enable-btn hidden" type="button">🔊 تشغيل صوت الطرف الآخر</button>
+            <button id="remoteFullBtn" class="round-overlay-btn" title="Fullscreen" type="button">⛶</button>
+          </div>
+          <div class="video-card local-card">
+            <video id="localVideo" autoplay muted playsinline></video>
+            <div class="video-top-meta compact"><span data-i18n="you">You</span> · <span id="localLabel">Guest</span></div>
+            <button id="localFullBtn" class="round-overlay-btn" title="Fullscreen" type="button">⛶</button>
+          </div>
+        </section>
+
+        <section class="call-controls">
+          <button id="micBtn" type="button" data-i18n="mic">🎙️ Microphone</button>
+          <button id="cameraBtn" type="button" data-i18n="camera">📷 Camera</button>
+          <button id="screenBtn" type="button" data-i18n="shareScreen">🖥️ Share</button>
+          <button id="deviceBtn" type="button" data-i18n="devices">⚙️ Devices</button>
+          <button id="restartBtn" type="button" data-i18n="reconnect">🔄 Reconnect</button>
+        </section>
+
+        <section id="devicePanel" class="device-panel hidden">
+          <div class="panel-heading" data-i18n="devicePanel">Device selection</div>
+          <label class="field-block"><span data-i18n="camera">Camera</span><select id="cameraSelect"></select></label>
+          <label class="field-block"><span data-i18n="microphone">Microphone</span><select id="micSelect"></select></label>
+          <label class="field-block"><span data-i18n="speaker">Speaker</span><select id="speakerSelect"></select></label>
+        </section>
+
+        <details class="connection-drawer social-drawer">
+          <summary><span data-i18n="connectionStatus">Connection status</span><span>⌄</span></summary>
+          <div class="connection-grid"><div><span data-i18n="ice">ICE</span><strong id="iceState">new</strong></div><div><span data-i18n="path">Path</span><strong id="candidateType">—</strong></div><div><span data-i18n="turnSession">TURN session</span><strong id="turnState">—</strong></div><div><span data-i18n="videoQuality">Video quality</span><strong id="qualityState">—</strong></div><div><span data-i18n="bitrate">Bitrate</span><strong id="bitrateState">—</strong></div></div>
+        </details>
+      </div>
+
+      <div class="mobile-view chat-view" id="mobileChatView">
+        <section class="chat-panel social-chat" id="dropzone">
+          <div class="chat-head social-chat-head">
+            <div class="chat-title-wrap"><div class="mini-avatar avatar-pink">L</div><div><strong data-i18n="chatRoom">Chat room</strong><span id="typingIndicator"></span></div></div>
+            <div class="chat-head-actions"><button id="notificationsBtn" class="circle-btn" type="button" title="Notifications">🔔</button><button id="downloadChatBtn" class="circle-btn" type="button" title="Download chat">⬇</button></div>
+          </div>
+          <div id="messages" class="messages"></div>
+          <div class="drop-hint" data-i18n="dragDrop">Drag files here to share</div>
+          <form id="chatForm" class="chat-form">
+            <button id="uploadBtn" type="button" class="composer-side">＋</button>
+            <input id="chatInput" maxlength="2000" placeholder="Write a message…" data-i18n-placeholder="typeMessage" autocomplete="off">
+            <button class="send-btn" type="submit" data-i18n="send">Send</button>
+            <button id="recordAudioBtn" type="button" class="composer-side voice-send" data-i18n="audioMessage">🎙</button>
+            <input id="fileInput" type="file" hidden multiple accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z,.mp3,.wav,.m4a,.ogg,.webm,.mp4">
+          </form>
+        </section>
+      </div>
+
+      <div class="mobile-bottom-nav social-nav"><button id="bottomCallBtn" class="active" type="button">📹 <small data-i18n="callTab">Call</small></button><button id="bottomChatBtn" type="button">💬 <small data-i18n="chatTab">Chat</small><span id="unreadBadge" class="tab-badge hidden">0</span></button></div>
+    </section>
+  </main>
+
+  <div id="storyViewer" class="story-viewer hidden" role="dialog" aria-modal="true" aria-label="Story viewer">
+    <button id="storyViewerClose" class="story-viewer-close" type="button" aria-label="Close">✕</button>
+    <div class="story-viewer-card">
+      <div class="story-viewer-head">
+        <div id="storyViewerAvatar" class="story-viewer-avatar">L</div>
+        <div><strong id="storyViewerName">Lutsa</strong><span id="storyViewerTime">—</span></div>
+      </div>
+      <div id="storyViewerMedia" class="story-viewer-media"></div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script src="/netlify-config.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    (() => {
+      const body = document.body;
+      const callView = document.getElementById('mobileCallView');
+      const chatView = document.getElementById('mobileChatView');
+      const callTabs = [document.getElementById('mobileCallTab'), document.getElementById('bottomCallBtn')];
+      const chatTabs = [document.getElementById('mobileChatTab'), document.getElementById('bottomChatBtn')];
+      function setMobileView(view) {
+        const chat = view === 'chat';
+        body.classList.toggle('mobile-chat-open', chat);
+        callView?.classList.toggle('call-view-active', !chat);
+        chatView?.classList.toggle('chat-view-active', chat);
+        [...callTabs, ...chatTabs].forEach(btn => btn?.classList.remove('active'));
+        (chat ? chatTabs : callTabs).forEach(btn => btn?.classList.add('active'));
+        if (chat) document.getElementById('chatInput')?.focus({ preventScroll: true });
+      }
+      callTabs.forEach(btn => btn?.addEventListener('click', () => setMobileView('call')));
+      chatTabs.forEach(btn => btn?.addEventListener('click', () => setMobileView('chat')));
+      window.addEventListener('resize', () => { if (window.innerWidth > 780) setMobileView('call'); });
+      window.setMobileView = setMobileView;
+    })();
+  </script>
+</body>
+</html>

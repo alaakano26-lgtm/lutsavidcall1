@@ -1,0 +1,28 @@
+{
+  "id": "/",
+  "name": "Lutsa vidcall",
+  "short_name": "Lutsa",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#032a20",
+  "theme_color": "#063f2f",
+  "description": "Social video calls with posts, friends, direct messages, notifications and chat.",
+  "categories": ["social", "communication"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
